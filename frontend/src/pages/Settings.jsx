@@ -62,92 +62,350 @@
 //     </MainLayout>
 //   );
 // }
+//
+//
+// import { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import MainLayout from '../components/layout/MainLayout';
+//
+// export default function Settings() {
+//   const navigate = useNavigate();
+//
+//   // User state initialized from localStorage or defaults
+//   const [profile, setProfile] = useState({
+//     name: 'jatin',
+//     email: 'jatin@gmail.com',
+//     userId: '6ae714ebc293a54ec7c6bccc',
+//   });
+//
+//   const [passwordForm, setPasswordForm] = useState({
+//     currentPassword: '',
+//     newPassword: '',
+//     confirmPassword: '',
+//   });
+//
+//   const [message, setMessage] = useState({ type: '', text: '' });
+//
+//   useEffect(() => {
+//     // Attempt loading saved user details if stored locally
+//     const savedName = localStorage.getItem('username');
+//     const savedEmail = localStorage.getItem('userEmail');
+//     if (savedName || savedEmail) {
+//       setProfile((prev) => ({
+//         ...prev,
+//         name: savedName || prev.name,
+//         email: savedEmail || prev.email,
+//       }));
+//     }
+//   }, []);
+//
+//   const handleProfileUpdate = (e) => {
+//     e.preventDefault();
+//     localStorage.setItem('username', profile.name);
+//     localStorage.setItem('userEmail', profile.email);
+//     setMessage({ type: 'success', text: 'Profile updated successfully!' });
+//     setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+//   };
+//
+//   const handlePasswordChange = (e) => {
+//     e.preventDefault();
+//     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+//       setMessage({ type: 'error', text: 'New passwords do not match!' });
+//       return;
+//     }
+//     if (passwordForm.newPassword.length < 6) {
+//       setMessage({ type: 'error', text: 'Password must be at least 6 characters.' });
+//       return;
+//     }
+//
+//     // Reset fields & show success feedback
+//     setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+//     setMessage({ type: 'success', text: 'Password changed successfully!' });
+//     setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+//   };
+//
+//   const handleClearBudget = () => {
+//     if (window.confirm('Are you sure you want to clear all locally stored budget goals?')) {
+//       localStorage.removeItem('budgetGoals');
+//       localStorage.removeItem('budgets');
+//       setMessage({ type: 'success', text: 'Local budget data cleared successfully!' });
+//       setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+//     }
+//   };
+//
+//   const handleSignOut = () => {
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('user');
+//     navigate('/login');
+//   };
+//
+//   return (
+//       <MainLayout>
+//         <div className="max-w-4xl">
+//           <div className="mb-6">
+//             <h1 className="text-2xl font-bold text-gray-800">Settings</h1>
+//             <p className="text-sm text-gray-400">Manage your account details and preferences</p>
+//           </div>
+//
+//           {/* Global Alert Notification */}
+//           {message.text && (
+//               <div
+//                   className={`mb-6 p-4 rounded-xl text-sm font-medium ${
+//                       message.type === 'success'
+//                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+//                           : 'bg-rose-50 text-rose-700 border border-rose-200'
+//                   }`}
+//               >
+//                 {message.text}
+//               </div>
+//           )}
+//
+//           <div className="space-y-6">
+//             {/* Profile Details Card */}
+//             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+//               <h2 className="text-base font-semibold text-gray-800 mb-4">Profile Information</h2>
+//
+//               <div className="flex items-center gap-4 mb-6">
+//                 <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold uppercase">
+//                   {profile.name.charAt(0)}
+//                 </div>
+//                 <div>
+//                   <h3 className="font-semibold text-gray-800 text-lg capitalize">{profile.name}</h3>
+//                   <p className="text-sm text-gray-400">{profile.email}</p>
+//                 </div>
+//               </div>
+//
+//               <form onSubmit={handleProfileUpdate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                 <div>
+//                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
+//                     Display Name
+//                   </label>
+//                   <input
+//                       type="text"
+//                       value={profile.name}
+//                       onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+//                       className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+//                       required
+//                   />
+//                 </div>
+//
+//                 <div>
+//                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
+//                     Email Address
+//                   </label>
+//                   <input
+//                       type="email"
+//                       value={profile.email}
+//                       onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+//                       className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+//                       required
+//                   />
+//                 </div>
+//
+//                 <div className="md:col-span-2 flex justify-end mt-2">
+//                   <button
+//                       type="submit"
+//                       className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
+//                   >
+//                     Save Profile
+//                   </button>
+//                 </div>
+//               </form>
+//
+//               <div className="mt-6 p-4 bg-gray-50 rounded-xl text-xs text-gray-500 space-y-1">
+//                 <p><span className="font-semibold">User ID:</span> {profile.userId}</p>
+//                 <p><span className="font-semibold">Authentication:</span> JWT Bearer Token (Stateless)</p>
+//               </div>
+//             </div>
+//
+//             {/* Security & Password Update */}
+//             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+//               <h2 className="text-base font-semibold text-gray-800 mb-4">Security Settings</h2>
+//
+//               <form onSubmit={handlePasswordChange} className="space-y-4">
+//                 <div>
+//                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
+//                     Current Password
+//                   </label>
+//                   <input
+//                       type="password"
+//                       value={passwordForm.currentPassword}
+//                       onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+//                       className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+//                       placeholder="••••••••"
+//                       required
+//                   />
+//                 </div>
+//
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                   <div>
+//                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
+//                       New Password
+//                     </label>
+//                     <input
+//                         type="password"
+//                         value={passwordForm.newPassword}
+//                         onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+//                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+//                         placeholder="••••••••"
+//                         required
+//                     />
+//                   </div>
+//
+//                   <div>
+//                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
+//                       Confirm New Password
+//                     </label>
+//                     <input
+//                         type="password"
+//                         value={passwordForm.confirmPassword}
+//                         onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+//                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+//                         placeholder="••••••••"
+//                         required
+//                     />
+//                   </div>
+//                 </div>
+//
+//                 <div className="flex justify-end pt-2">
+//                   <button
+//                       type="submit"
+//                       className="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
+//                   >
+//                     Update Password
+//                   </button>
+//                 </div>
+//               </form>
+//             </div>
+//
+//             {/* Account Actions */}
+//             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+//               <h2 className="text-base font-semibold text-gray-800 mb-4">Account Actions</h2>
+//
+//               <div className="space-y-3">
+//                 <button
+//                     type="button"
+//                     onClick={handleClearBudget}
+//                     className="w-full flex items-center justify-center gap-2 p-3 border border-amber-300 bg-amber-50/50 hover:bg-amber-50 text-amber-700 font-medium rounded-xl text-sm transition-colors"
+//                 >
+//                   🗑️ Clear Local Budget Data
+//                 </button>
+//
+//                 <button
+//                     type="button"
+//                     onClick={handleSignOut}
+//                     className="w-full flex items-center justify-center gap-2 p-3 border border-rose-200 bg-rose-50/50 hover:bg-rose-50 text-rose-600 font-medium rounded-xl text-sm transition-colors"
+//                 >
+//                   🚪 Sign Out
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </MainLayout>
+//   );
+// }
+//
+//
+
+
+
 
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { User, Mail, LogOut, Trash2 } from 'lucide-react';
+
 import MainLayout from '../components/layout/MainLayout';
+import { useAuth } from '../context/AuthContext';
 
 export default function Settings() {
+  const { user, updateUser, logout } = useAuth();
   const navigate = useNavigate();
 
-  // User state initialized from localStorage or defaults
   const [profile, setProfile] = useState({
-    name: 'jatin',
-    email: 'jatin@gmail.com',
-    userId: '6ae714ebc293a54ec7c6bccc',
+    name: '',
+    email: '',
   });
 
-  const [passwordForm, setPasswordForm] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+  const [message, setMessage] = useState({
+    type: '',
+    text: '',
   });
 
-  const [message, setMessage] = useState({ type: '', text: '' });
-
+  // Load actual authenticated user details
   useEffect(() => {
-    // Attempt loading saved user details if stored locally
-    const savedName = localStorage.getItem('username');
-    const savedEmail = localStorage.getItem('userEmail');
-    if (savedName || savedEmail) {
-      setProfile((prev) => ({
-        ...prev,
-        name: savedName || prev.name,
-        email: savedEmail || prev.email,
-      }));
+    if (user) {
+      setProfile({
+        name: user.name || '',
+        email: user.email || '',
+      });
     }
-  }, []);
+  }, [user]);
 
+  // Display notification
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+  };
+
+  // Update profile
   const handleProfileUpdate = (e) => {
     e.preventDefault();
-    localStorage.setItem('username', profile.name);
-    localStorage.setItem('userEmail', profile.email);
-    setMessage({ type: 'success', text: 'Profile updated successfully!' });
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+
+    try {
+      updateUser({
+        name: profile.name.trim(),
+        email: profile.email.trim(),
+      });
+
+      showMessage(
+          'success',
+          'Profile updated successfully!'
+      );
+    } catch (error) {
+      showMessage('error', error.message);
+    }
   };
 
-  const handlePasswordChange = (e) => {
-    e.preventDefault();
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      setMessage({ type: 'error', text: 'New passwords do not match!' });
-      return;
-    }
-    if (passwordForm.newPassword.length < 6) {
-      setMessage({ type: 'error', text: 'Password must be at least 6 characters.' });
-      return;
-    }
-
-    // Reset fields & show success feedback
-    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    setMessage({ type: 'success', text: 'Password changed successfully!' });
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
-  };
-
+  // Clear budget data
   const handleClearBudget = () => {
-    if (window.confirm('Are you sure you want to clear all locally stored budget goals?')) {
+    if (
+        window.confirm(
+            'Are you sure you want to clear all budget data?'
+        )
+    ) {
+      localStorage.removeItem('finance_budgets');
       localStorage.removeItem('budgetGoals');
       localStorage.removeItem('budgets');
-      setMessage({ type: 'success', text: 'Local budget data cleared successfully!' });
-      setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+
+      showMessage(
+          'success',
+          'Budget data cleared successfully!'
+      );
     }
   };
 
-  const handleSignOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  // Logout
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 
   return (
       <MainLayout>
         <div className="max-w-4xl">
+
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Settings</h1>
-            <p className="text-sm text-gray-400">Manage your account details and preferences</p>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Settings
+            </h1>
+
+            <p className="text-sm text-gray-400">
+              Manage your account details and preferences
+            </p>
           </div>
 
-          {/* Global Alert Notification */}
+          {/* Notifications */}
           {message.text && (
               <div
                   className={`mb-6 p-4 rounded-xl text-sm font-medium ${
@@ -161,29 +419,51 @@ export default function Settings() {
           )}
 
           <div className="space-y-6">
-            {/* Profile Details Card */}
+
+            {/* Profile Information */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-base font-semibold text-gray-800 mb-4">Profile Information</h2>
+
+              <h2 className="text-base font-semibold text-gray-800 mb-4">
+                Profile Information
+              </h2>
 
               <div className="flex items-center gap-4 mb-6">
+
                 <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold uppercase">
-                  {profile.name.charAt(0)}
+                  {profile.name?.charAt(0) || 'U'}
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-gray-800 text-lg capitalize">{profile.name}</h3>
-                  <p className="text-sm text-gray-400">{profile.email}</p>
+                  <h3 className="font-semibold text-gray-800 text-lg">
+                    {user?.name || 'User'}
+                  </h3>
+
+                  <p className="text-sm text-gray-400">
+                    {user?.email || ''}
+                  </p>
                 </div>
+
               </div>
 
-              <form onSubmit={handleProfileUpdate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form
+                  onSubmit={handleProfileUpdate}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
+
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
                     Display Name
                   </label>
+
                   <input
                       type="text"
                       value={profile.name}
-                      onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                      onChange={(e) =>
+                          setProfile({
+                            ...profile,
+                            name: e.target.value,
+                          })
+                      }
                       className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
                       required
                   />
@@ -193,113 +473,85 @@ export default function Settings() {
                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
                     Email Address
                   </label>
+
                   <input
                       type="email"
                       value={profile.email}
-                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                      onChange={(e) =>
+                          setProfile({
+                            ...profile,
+                            email: e.target.value,
+                          })
+                      }
                       className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
                       required
                   />
                 </div>
 
                 <div className="md:col-span-2 flex justify-end mt-2">
+
                   <button
                       type="submit"
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm transition-colors"
                   >
                     Save Profile
                   </button>
+
                 </div>
+
               </form>
 
               <div className="mt-6 p-4 bg-gray-50 rounded-xl text-xs text-gray-500 space-y-1">
-                <p><span className="font-semibold">User ID:</span> {profile.userId}</p>
-                <p><span className="font-semibold">Authentication:</span> JWT Bearer Token (Stateless)</p>
+
+                <p>
+                <span className="font-semibold">
+                  User ID:
+                </span>{' '}
+                  {user?.userId || 'Not available'}
+                </p>
+
+                <p>
+                <span className="font-semibold">
+                  Authentication:
+                </span>{' '}
+                  JWT Bearer Token (Stateless)
+                </p>
+
               </div>
-            </div>
 
-            {/* Security & Password Update */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-base font-semibold text-gray-800 mb-4">Security Settings</h2>
-
-              <form onSubmit={handlePasswordChange} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
-                    Current Password
-                  </label>
-                  <input
-                      type="password"
-                      value={passwordForm.currentPassword}
-                      onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                      placeholder="••••••••"
-                      required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
-                      New Password
-                    </label>
-                    <input
-                        type="password"
-                        value={passwordForm.newPassword}
-                        onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                        placeholder="••••••••"
-                        required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
-                      Confirm New Password
-                    </label>
-                    <input
-                        type="password"
-                        value={passwordForm.confirmPassword}
-                        onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                        placeholder="••••••••"
-                        required
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-2">
-                  <button
-                      type="submit"
-                      className="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
-                  >
-                    Update Password
-                  </button>
-                </div>
-              </form>
             </div>
 
             {/* Account Actions */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-base font-semibold text-gray-800 mb-4">Account Actions</h2>
+
+              <h2 className="text-base font-semibold text-gray-800 mb-4">
+                Account Actions
+              </h2>
 
               <div className="space-y-3">
+
                 <button
                     type="button"
                     onClick={handleClearBudget}
                     className="w-full flex items-center justify-center gap-2 p-3 border border-amber-300 bg-amber-50/50 hover:bg-amber-50 text-amber-700 font-medium rounded-xl text-sm transition-colors"
                 >
-                  🗑️ Clear Local Budget Data
+                  <Trash2 size={16} />
+                  Clear Local Budget Data
                 </button>
 
                 <button
                     type="button"
-                    onClick={handleSignOut}
+                    onClick={handleLogout}
                     className="w-full flex items-center justify-center gap-2 p-3 border border-rose-200 bg-rose-50/50 hover:bg-rose-50 text-rose-600 font-medium rounded-xl text-sm transition-colors"
                 >
-                  🚪 Sign Out
+                  <LogOut size={16} />
+                  Sign Out
                 </button>
+
               </div>
+
             </div>
+
           </div>
         </div>
       </MainLayout>

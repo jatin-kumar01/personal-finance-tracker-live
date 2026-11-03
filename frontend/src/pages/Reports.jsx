@@ -205,13 +205,28 @@ export default function Reports() {
 
         {/* Pie Charts Grid */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+          {/* Income Chart */}
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Income by Category</h3>
-            <ExpensePieChart data={incomeCategories} />
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">
+              Income by Category
+            </h3>
+
+            <ExpensePieChart
+                data={incomeCategories}
+                type="income"
+            />
           </div>
+
+          {/* Expense Chart */}
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Expense by Category</h3>
-            <ExpensePieChart data={expenseCategories} />
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">
+              Expense by Category
+            </h3>
+
+            <ExpensePieChart
+                data={expenseCategories}
+                type="expense"
+            />
           </div>
         </div>
       </MainLayout>
